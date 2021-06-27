@@ -19,27 +19,18 @@ import com.fcg.bookings.service.AppointmentRequestsService;
 public class AppointmentsRequestsController {
 
 	final private AppointmentRequestsService appointmentRequestsService;
-	final private AppointmentRequestMapper modelMapper;
 
 	@Autowired
-	public AppointmentsRequestsController(AppointmentRequestsService appointmentsService, AppointmentRequestMapper modelMapper) {
+	public AppointmentsRequestsController(AppointmentRequestsService appointmentsService) {
 		this.appointmentRequestsService = appointmentsService;
-		this.modelMapper = modelMapper;
 	}
 
 	@ResponseBody
 	@PostMapping(value = "/create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public AppointmentRequestDTO create(@RequestBody AppointmentRequestDTO appointmentRequest) {
-		var appointment = appointmentRequestsService.create(mapFromDTO(appointmentRequest));
-		return mapToDTO(appointment);
+		var appointment = appointmentRequestsService.create(AppointmentRequestMapper.mapFromDTO(appointmentRequest));
+		return AppointmentRequestMapper.mapToDTO(appointment);
 	}
 
-	private AppointmentRequestDTO mapToDTO(AppointmentRequest appointment) {
-		return modelMapper.map(appointment, AppointmentRequestDTO.class);
-	}
-
-	private AppointmentRequest mapFromDTO(AppointmentRequestDTO appointmentDTO) {
-		return modelMapper.map(appointmentDTO, AppointmentRequest.class);
-	}
 }
